@@ -14,7 +14,7 @@ void loop()
     delay(3000); //move forward for 3 sec.
 
     x = rand_hard();
-    if(x>0.5)
+    if(x>128)
     {
         set_color(RGB(1,0,0));
         set_motors(0, 125);
