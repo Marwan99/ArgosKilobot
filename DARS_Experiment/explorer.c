@@ -1,5 +1,3 @@
-
-
 #include <kilolib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,7 +74,7 @@ void loop()
 
     }
     else if(motion_state == 2 && kilo_ticks-motion_prev_time > turn_time)
-	{
+    {
         motion_state = 1;
         motion_prev_time = kilo_ticks;
         spinup_motors();
@@ -91,33 +89,51 @@ void loop()
     }
 
     /*----------------updating commitment state decision--------------------*/
+
     if(cur_time-commit_prev_time > 200)
     {
+
         commit_prev_time = cur_time;
+        x = rand() % 100;
+
         printf("Before :%d ",commit_state);
-        if(flag)
+        /*-----When uncommitted------*/
+        if(commit_state==uncommited)
         {
-            flag=0;
-            x=rand()%100;
+            if (flag)
+            {
+                flag = 0;
 
-            if(x<rec_quality[Ci])
-                commit_state = Ci;
-            else if(x>=rec_quality[Ci]  && x<(rec_quality[Ci]+rec_quality[Cj]))
-                commit_state = Cj;
+                if (x < rec_quality[Ci])
+                    commit_state = Ci;
+                else if (x >= rec_quality[Ci] && x < (rec_quality[Ci] + rec_quality[Cj]))
+                    commit_state = Cj;
+            }
+        }
+            /*-----When committed------*/
+        else
+        {
+            if(flag && commit_state==Cj && x < rec_quality[Ci])
+                commit_state == uncommited;
 
-            rec_quality[Ci]=0;
-            rec_quality[Cj]=0;
+            else if(flag && commit_state==Ci && x >= rec_quality[Ci] && x < (rec_quality[Ci] + rec_quality[Cj]))
+                commit_state == uncommited;
+
+            else if (commit_state == Ci && rand()%100 < pa1)
+                commit_state = uncommited;
+
+            else if (commit_state == Cj && rand()%100 < pa2)
+                commit_state = uncommited;
         }
 
-        else if(commit_state == Ci && rand()%100 < pa1)
-            commit_state = uncommited;
+        rec_quality[Ci] = 0;
+        rec_quality[Cj] = 0;
 
-        else if(commit_state == Cj && rand()%100 < pa2)
-            commit_state = uncommited;
         printf(", rand :%d ",x);
         printf(", after :%d\n",commit_state);
-        led_colour(commit_state);
         //printf("Payload: %d. From: %d Rand: %d. State: %d\n",mes_payload, mes_from, x, commit_state);
+
+        led_colour(commit_state);
     }
 
     /*----------------Broadcasting state--------------------*/
