@@ -1,6 +1,8 @@
 #include <kilolib.h>
 #include <stdlib.h>
 
+#define quality 60
+
 int message_sent = 0;
 message_t message;
 uint32_t message_last_changed = 0;
@@ -19,8 +21,8 @@ void loop()
     {
         message_last_changed = kilo_ticks;
         message.type = NORMAL;
-        message.data[0] = Ci;
-        message.data[0] = rand()%255;
+        message.data[0] = Cj;
+        message.data[1] = quality;
         message.crc = message_crc(&message);
 
     }
@@ -29,8 +31,8 @@ void loop()
     if (message_sent)
     {
         message_sent = 0;
-
-        set_color(RGB(1, 0, 1));
+        //printf("Red sent: %d %d\n", message.data[0], message.data[1]);
+        set_color(RGB(1, 0, 0));
         delay(100);
         set_color(RGB(0, 0, 0));
     }
