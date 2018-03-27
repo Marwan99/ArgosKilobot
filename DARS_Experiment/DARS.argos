@@ -16,7 +16,7 @@
   <!-- *************** -->
   <controllers>
 
-    <kilobot_controller id="speaker">
+    <kilobot_controller id="beacon_blue">
       <actuators>
         <differential_steering implementation="default" />
         <leds implementation="default" medium="leds" />
@@ -29,7 +29,7 @@
       <params behavior="build/examples/behaviors/beacon_blue" />
     </kilobot_controller>
 
-    <kilobot_controller id="listener">
+    <kilobot_controller id="beacon_red">
       <actuators>
         <differential_steering implementation="default" />
         <leds implementation="default" medium="leds" />
@@ -60,31 +60,44 @@
   <!-- *********************** -->
   <!-- * Arena configuration * -->
   <!-- *********************** -->
-  <arena size="2, 2, 1" center="0,0,0.5">
+  <arena size="3, 3, 1" center="0,0,0.5">
     <light id="l0"
            position="0,0,0.95"
            orientation="0,0,0"
            color="yellow"
            intensity="1.0"
            medium="leds"/>
+    <!-- Place four boxes in a square to delimit the arena -->
+    <box id="wall_north" size="2,0.1,0.5" movable="false">
+      <body position="0,1,0" orientation="0,0,0" />
+    </box>
+    <box id="wall_south" size="2,0.1,0.5" movable="false">
+      <body position="0,-1,0" orientation="0,0,0" />
+    </box>
+    <box id="wall_east" size="0.1,2,0.5" movable="false">
+      <body position="1,0,0" orientation="0,0,0" />
+    </box>
+    <box id="wall_west" size="0.1,2,0.5" movable="false">
+      <body position="-1,0,0" orientation="0,0,0" />
+    </box>
 
     <kilobot id="kb1">
-      <body position="-0.025,0,0" orientation="0,0,0" />
-      <controller config="speaker" />>
+      <body position="-0.7,0,0" orientation="0,0,0" />
+      <controller config="beacon_red" />>
     </kilobot>
 
     <kilobot id="kb2">
-      <body position="0.025,0,0" orientation="0,0,0" />
-      <controller config="listener" />>
+      <body position="0.7,0,0" orientation="0,0,0" />
+      <controller config="beacon_blue" />>
     </kilobot>
 
     <distribute>
-    <position method="uniform" min="-2,-2,0" max="2,2,0" />
+    <position method="uniform" min="-0.9,-0.9,0" max="0.9,0.9,0" />
     <orientation method="gaussian" mean="0,0,0" std_dev="360,0,0" />
-    <entity quantity="40" max_trials="100">
-      <foot-bot id="ex">
+    <entity quantity="100" max_trials="100">
+      <kilobot id="ex">
         <controller config="explorer" />
-      </foot-bot>
+      </kilobot>
     </entity>
   </distribute>
 
@@ -111,8 +124,8 @@
   <visualization>
     <qt-opengl>
       <camera>
-        <placement idx="0" position="-0.126801,-0.00109986,0.249553" look_at="0.303994,-0.00540795,-0.652886" lens_focal_length="20" />
-        <placement idx="1" position="-0.0229259,-0.177184,0.0725521" look_at="0.0273839,0.812385,-0.0624333" lens_focal_length="20" />
+        <placement idx="0" position="-0.126801,-0.00109986,0.249553" look_at="0.303994,-0.00540795,-0.652886" lens_focal_length="60" />
+        <placement idx="1" position="-0.0229259,-0.177184,0.0725521" look_at="0.0273839,0.812385,-0.0624333" lens_focal_length="60" />
       </camera>
     </qt-opengl>
   </visualization>
